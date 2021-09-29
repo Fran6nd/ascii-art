@@ -1,4 +1,4 @@
-from PIL import Image
+from PIL import Image, ImageFont, ImageDraw
 import sys
 im = Image.open(sys.argv[1])
 
@@ -21,13 +21,14 @@ im.save("test.jpg")
 im = Image.open('test.jpg')
 pixels = im.load()
 width, height = im.size
-print(width, height)
+
 output = ""
 chars = ["  ", "--", "::", "||", "[]", "OO", "00", "&&", "##"]
 
 
-for x in range(0, width):
-    for y in range(0, height):
+
+for y in range(0, height):
+    for x in range(0, width):
         #print(pixels[x,y])
         avg = pixels[x,y][0]
         avg = (int) (avg / 256 * len(chars))
@@ -35,6 +36,15 @@ for x in range(0, width):
         
 
     output = output + "\n"
-#with open("output.txt", "w") as f:
-#    f.write(output)
-print(output)
+if len(sys.argv) == 2: 
+    with open("output.txt", "w") as f:
+        f.write(output)
+    print(output)
+
+else:
+    img = Image.new('RGB', (width * 15, height*15), color = (0, 0,0))
+    
+    fnt = ImageFont.truetype('./terminus.ttf', 15)
+    d = ImageDraw.Draw(img)
+    d.text((0,0), output, font=fnt, fill=(255, 255, 255))
+    img.save(sys.argv[2])
