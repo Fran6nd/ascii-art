@@ -12,13 +12,13 @@ for x in range(0, width):
         g = pixels[x,y][1]
         b = pixels[x,y][2]
         avg = int( (r +g + b) / 3)
-        pixels[x,y] = (avg,avg,avg)
+        pixels[x,y] = (avg,avg,avg, 255)
 
-im.thumbnail((100,100),Image.ANTIALIAS)
-im.save("test.jpg")
+im.thumbnail((150,150),Image.ANTIALIAS)
+#im.save("test.png")
 
 
-im = Image.open('test.jpg')
+#im = Image.open('test.png')
 pixels = im.load()
 width, height = im.size
 
@@ -37,8 +37,8 @@ for y in range(0, height):
 
     output = output + "\n"
 if len(sys.argv) == 2: 
-    with open("output.txt", "w") as f:
-        f.write(output)
+    #with open("output.txt", "w") as f:
+       # f.write(output)
     print(output)
 
 else:
