@@ -15,7 +15,7 @@ for x in range(0, width):
         avg = int( (r +g + b) / 3)
         pixels[x,y] = (avg,avg,avg, 255)
 
-im.thumbnail((100,100),Image.ANTIALIAS)
+im.thumbnail((150,150),Image.ANTIALIAS)
 #im.save("test.png")
 
 
@@ -24,7 +24,7 @@ pixels = im.load()
 width, height = im.size
 
 output = ""
-chars = ["  ", "::", "--", "||","VA", "€€", "OO", "00", "&&", "##"]
+chars = ["  ", "::", "--", "||", "VA", "OO", "00", "&&", "##"]
 
 
 
