@@ -132,3 +132,10 @@ dmypy.json
 *.bmp
 *.jpg
 *.png
+
+# Nuitka
+*.dist
+*.build
+
+# Binary
+ascii-art
