@@ -1,5 +1,7 @@
 #!/usr/local/bin/python3
 from PIL import Image, ImageFont, ImageDraw
+import numpy
+import cv2
 import sys
 
 def main():
@@ -34,6 +36,26 @@ class videofilter():
         self.input_size = None
         self.text_size = [0,0]
         self.output_size = None
+    def process_cv_image(self, im : numpy.ndarray):
+        im = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
+        output = ""
+        im = cv2.resize(im, None, fx = 0.5 * 0.1, fy = 1 * 0.1, interpolation = cv2.INTER_CUBIC)
+        #im = cv2.resize(im, (im.size[0], im.size[1]/2))
+        if not self.input_size:
+            self.input_size = im.shape
+        prevx = 0
+        for x,y in numpy.ndindex(im.shape):
+            #print(x, y)
+            if prevx != x:
+                output = output + "\n"
+                prevx = x
+
+            #print(im[x][y])
+            #r,g,g = im[x][y]
+            avg = (int) (im[x][y] / 256 * len(self.chars))
+            output = output + self.chars[avg]
+        #exit()
+        return output[:-1]
     def process_pil_img(self, im):
         im.thumbnail((int(im.size[0]/10), int(im.size[1]/10/2)), Image.ANTIALIAS)
         if not self.input_size:
@@ -55,7 +77,7 @@ class videofilter():
                 output = output + self.chars[avg]
             output = output + "\n"
             self.line += 1
-        return output
+        return output[:-1]
     def text_to_img(self, text, color = (0,0,0)):
         if not self.output_size:
             self.output_size = self.fnt.getsize_multiline(text)
