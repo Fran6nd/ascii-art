@@ -15,7 +15,7 @@ def show_webcam(mirror=False):
             color_coverted = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
             pil_image=Image.fromarray(color_coverted)
 
-            pil_image.thumbnail((int(pil_image.size[0]/15/1.5), int(pil_image.size[1]/15/1.5)), Image.ANTIALIAS)
+            pil_image.thumbnail((int(pil_image.size[0]/15/1), int(pil_image.size[1]/15/1)), Image.ANTIALIAS)
             pil_image = main.text_to_img(main.process_pil_img(pil_image), pil_image.size, (0,255,0))
             numpy_image=np.array(pil_image)  
 
