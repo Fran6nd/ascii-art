@@ -1,14 +1,17 @@
 #!/usr/local/bin/python3
 from PIL import Image, ImageFont, ImageDraw
 import sys
-fnt = ImageFont.truetype('./terminus.ttf', 15)
+fnt = ImageFont.truetype('./terminus.ttf', 16)
 chars = [" ", ":", "-", "|", "V", "O", "0", "&", "#"]
-chars = list(" .:-=+*#%@")
+#chars = list(" .:-=+*#%@")
+fnt_size = fnt.getsize("A")
+print(fnt_size)
 #chars = list("$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,\"^`'. ")
 #chars.reverse()
 for i in range(len(chars)):
     chars[i] = chars[i] + chars[i]
 def process_pil_img(im):
+    im.thumbnail((int(im.size[0]/fnt_size[0]), int(im.size[1]/fnt_size[1])), Image.ANTIALIAS)
     pixels = im.load()
     width, height = im.size
 
@@ -26,8 +29,10 @@ def process_pil_img(im):
         output = output + "\n"
     return output
 def text_to_img(text, size, color = (0,0,0)):
-        img = Image.new('RGB', (size[0] * 15, size[1]*15), color = (0, 0,0))
+        img = Image.new('RGB', (size[0] * fnt_size[0] * 2, int(size[1]*fnt_size[1]*2*2/3)) , color = (0, 0,0))
         #global fnt
+        print(len(text.split("\n")))
+        print(size, size[1]*fnt_size[1], size[1]*fnt_size[1] + 170)
         d = ImageDraw.Draw(img)
         d.text((0,0), text, font=fnt, fill=color)
         return img
