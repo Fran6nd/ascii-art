@@ -66,6 +66,7 @@ class videofilter():
         for i in range(len(chars)):
             self.chars[i] = self.chars[i] + self.chars[i]
     def process_pil_img(self, im):
+        im.thumbnail((int(im.size[0]/10), int(im.size[1]/10/2)), Image.ANTIALIAS)
         if not self.input_size:
             self.input_size = im.size
         pixels = im.load()
@@ -74,6 +75,7 @@ class videofilter():
         output = ""
 
         self.text_size = [0,0]
+        self.line = 0
         for y in range(0, height):
             for x in range(0, width):
                 r = pixels[x,y][0]
@@ -83,14 +85,17 @@ class videofilter():
                 avg = (int) (avg / 256 * len(chars))
                 output = output + chars[avg]
             output = output + "\n"
+            self.line += 1
         return output
     def text_to_img(self, text, color = (0,0,0)):
         if not self.output_size:
-
-            img = Image.new('RGB',self.output_size , color = (0, 0,0))
-            #global fnt
-            d = ImageDraw.Draw(img)
-            d.text((0,0), text, font=fnt, fill=color)
-            return img
+            self.output_size = self.fnt.getsize(text)
+            self.output_size = (int(self.output_size[0]/self.line), self.output_size[1]*self.line)
+            print(self.output_size)
+        img = Image.new('RGB',self.output_size , color = (0, 0,0))
+        #global fnt
+        d = ImageDraw.Draw(img)
+        d.text((0,0), text, font=fnt, fill=color)
+        return img
     def full_process_img(self, img):
         return self.text_to_img(self.process_pil_img(img), (0,255, 0))
