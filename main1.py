@@ -8,6 +8,7 @@ from PIL import Image
 import main
 def show_webcam(mirror=False):
     cam = cv2.VideoCapture(0)
+    filter = main.videofilter()
     while True:
         ret_val, img = cam.read()
         
@@ -18,7 +19,7 @@ def show_webcam(mirror=False):
         pil_image=Image.fromarray(color_coverted)
 
         #pil_image.thumbnail((int(pil_image.size[0]/2), int(pil_image.size[1]/2)), Image.ANTIALIAS)
-        pil_image = main.text_to_img(main.process_pil_img(pil_image), pil_image.size, (0,255,0))
+        pil_image = filter.full_process_img(pil_image)
         numpy_image=np.array(pil_image)  
 
         # convert to a openCV2 image, notice the COLOR_RGB2BGR which means that 
