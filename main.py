@@ -58,9 +58,7 @@ class videofilter():
         return output
     def text_to_img(self, text, color = (0,0,0)):
         if not self.output_size:
-            self.output_size = self.fnt.getsize(text)
-            self.output_size = (int(self.output_size[0]/self.line), self.output_size[1]*self.line)
-            print(self.output_size)
+            self.output_size = self.fnt.getsize_multiline(text)
         img = Image.new('RGB',self.output_size , color = (0, 0,0))
         #global fnt
         d = ImageDraw.Draw(img)
