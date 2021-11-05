@@ -37,9 +37,11 @@ class videofilter():
         self.text_size = [0,0]
         self.output_size = None
     def process_cv_image(self, im : numpy.ndarray):
-        im = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
+        
         output = ""
         im = cv2.resize(im, None, fx = 0.5 * 0.1, fy = 1 * 0.1, interpolation = cv2.INTER_CUBIC)
+        im = cv2.rotate(im, cv2.ROTATE_90_CLOCKWISE)
+        im = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
         #im = cv2.resize(im, (im.size[0], im.size[1]/2))
         if not self.input_size:
             self.input_size = im.shape
