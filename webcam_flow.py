@@ -6,11 +6,11 @@ import cv2
 import time
 import numpy as np
 from PIL import Image
-import main
+import lib
 
 def show_webcam(mirror=False):
     cam = cv2.VideoCapture(0)
-    filter = main.videofilter()
+    filter = lib.videofilter()
     prev_frame_time = 0
   
     new_frame_time = 0
@@ -58,7 +58,6 @@ def show_webcam(mirror=False):
         if cv2.waitKey(1) == 27: 
             break  # esc to quit
     cv2.destroyAllWindows()
-def if_main():
-    show_webcam(mirror=True)
+
 if __name__ == '__main__':
-    if_main()
+    show_webcam(mirror=True)
