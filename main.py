@@ -4,6 +4,7 @@ import numpy
 import time
 import cv2
 import sys
+import threading
 from profilestats import profile
 
 def main():
@@ -27,6 +28,7 @@ if __name__ == '__main__':
 
 class videofilter():
     def __init__(self):
+        self.threads = 0
         self.fnt = ImageFont.truetype('./terminus.ttf', 32)
         #self.chars = [" ", ".", ":", "|", "V", "O", "0", "#", "@"]
         #self.chars = list(" .:-=+*#%@")
@@ -35,6 +37,8 @@ class videofilter():
             self.chars[i] = self.chars[i] + self.chars[i]
 
         self.fnt_size = self.fnt.getsize("A")
+        self.line_spacing = self.fnt.getsize_multiline("A\nB")[1] - 2 * self.fnt_size[1]
+        print(self.line_spacing)
         self.input_size = None
         self.output_size = None
 
@@ -57,7 +61,7 @@ class videofilter():
             avg = (int) (im[x][y] / 256 * len(self.chars))
             output = output + self.chars[avg]
         #exit()
-        print("cv->text", time.process_time() - start)
+        #print("cv->text", time.process_time() - start)
         return output[:-1]
     def process_pil_img(self, im):
         start = time.process_time()
@@ -80,17 +84,42 @@ class videofilter():
             output = output + "\n"
             self.line += 1
 
-        print("pill->text", time.process_time() - start)
+        #print("pill->text", time.process_time() - start)
         return output[:-1]
+    def run_in_thread(self, target):
+        def thread():
+            self.threads += 1
+            target()
+            self.threads -= 1
+        threading.Thread(target=thread).start()
     def text_to_img(self, text, color = (0,0,0)):
-        start = time.process_time()
+        lines = len(text.split('\n'))
+        line_length = len(text.split('\n')[0])
+
         if not self.output_size:
             self.output_size = self.fnt.getsize_multiline(text)
         img = Image.new('RGB',self.output_size , color = (0, 0,0))
         #global fnt
-        d = ImageDraw.Draw(img)
-        d.text((0,0), text, font=self.fnt, fill=color)
-        print("text->img", time.process_time() - start)
+
+        start = time.process_time()
+        def do_lines(start, stop):
+            #print(start, stop)
+            d = ImageDraw.Draw(img)
+            subtext = text[start * (line_length + 1): stop * (line_length + 1)]
+            d.text((0,start * (self.line_spacing + self.fnt_size[1])), subtext, font=self.fnt, fill=color)
+        k = 3
+        #for i in range (k-1):
+        #    self.run_in_thread(lambda : do_lines(int(i/k) * lines, int((1 + i) / k * lines)))
+        self.run_in_thread(lambda : do_lines(0, int(lines/2)))
+        #self.run_in_thread(lambda : do_lines(int(lines/4), int(lines/2)))
+        #self.run_in_thread(lambda : do_lines(int(lines/2), int(3*lines/4)))
+        #do_lines(int(3*lines/4), lines)
+        #print(self.th)
+        do_lines(int(lines/2), lines)
+        #do_lines(0,lines)
+        while self.threads != 0:
+            pass
+        #print("text->img", time.process_time() - start)
         return img
     def full_process_img(self, img):
         return self.text_to_img(self.process_pil_img(img), (0,255, 0))
