@@ -5,7 +5,6 @@ import time
 import cv2
 import sys
 import threading
-from profilestats import profile
 
 def main():
     im = Image.open(sys.argv[1])
@@ -32,7 +31,7 @@ class videofilter():
         self.fnt = ImageFont.truetype('./terminus.ttf', 32)
         #self.chars = [" ", ".", ":", "|", "V", "O", "0", "#", "@"]
         #self.chars = list(" .:-=+*#%@")
-        self.chars = list(" ,:|1O0@")
+        self.chars = list(" ,:;|1[CO0@")
         for i in range(len(self.chars)):
             self.chars[i] = self.chars[i] + self.chars[i]
 
@@ -100,6 +99,15 @@ class videofilter():
             self.output_size = self.fnt.getsize_multiline(text)
             self.img = Image.new('RGB',self.output_size , color = (0, 0,0))
             self.d = ImageDraw.Draw(self.img)
+
+            self.chars_img = list()
+            for c in self.chars:
+                size = self.fnt_size
+                tmp = Image.new('RGB',self.fnt.getsize(c) , color = (0, 0,0))
+                d = ImageDraw.Draw(tmp)
+                d.text((0,0), c, font=self.fnt, fill=color)
+                self.chars_img.append(tmp)
+
         #global fnt
 
         start = time.process_time()
@@ -107,16 +115,25 @@ class videofilter():
             #print(start, stop)
             
             subtext = text[start * (line_length + 1): stop * (line_length + 1)]
+
             self.d.text((0,start * (self.line_spacing + self.fnt_size[1])), subtext, font=self.fnt, fill=color)
-        self.img.paste( (0,0,0), [0,0,self.img.size[0],self.img.size[1]])
-        #for i in range (k-1):
-        #    self.run_in_thread(lambda : do_lines(int(i/k) * lines, int((1 + i) / k * lines)))
-        self.run_in_thread(lambda : do_lines(0, int(lines/2)))
-        #self.run_in_thread(lambda : do_lines(int(lines/4), int(lines/2)))
-        #self.run_in_thread(lambda : do_lines(int(lines/2), int(3*lines/4)))
-        #do_lines(int(3*lines/4), lines)
-        #print(self.th)
-        do_lines(int(lines/2), lines)
+        #self.img.paste( (0,0,0), [0,0,self.img.size[0],self.img.size[1]])
+
+
+        #self.run_in_thread(lambda : do_lines(0, int(lines/2)))
+
+        #do_lines(int(lines/2), lines)
+        text = text.split("\n")
+        for y in range(len(text)):
+            for x in range(int(len(text[y])/2)):
+                index = 0
+                for i in range(len(self.chars)):
+                    if self.chars[i] == text[y][x*2] + text[y][x*2+1]:
+                        index = i
+                        break
+                offset =  (x * self.fnt_size[0] *2,y* (self.fnt_size[1]+self.line_spacing))
+                self.img.paste(self.chars_img[index], (offset[0],offset[1], self.chars_img[index].size[0]+offset[0],offset[1]+self.chars_img[index].size[1]))
+
         #do_lines(0,lines)
         while self.threads != 0:
             pass
