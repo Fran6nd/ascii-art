@@ -98,16 +98,17 @@ class videofilter():
 
         if not self.output_size:
             self.output_size = self.fnt.getsize_multiline(text)
-        img = Image.new('RGB',self.output_size , color = (0, 0,0))
+            self.img = Image.new('RGB',self.output_size , color = (0, 0,0))
+            self.d = ImageDraw.Draw(self.img)
         #global fnt
 
         start = time.process_time()
         def do_lines(start, stop):
             #print(start, stop)
-            d = ImageDraw.Draw(img)
+            
             subtext = text[start * (line_length + 1): stop * (line_length + 1)]
-            d.text((0,start * (self.line_spacing + self.fnt_size[1])), subtext, font=self.fnt, fill=color)
-        k = 3
+            self.d.text((0,start * (self.line_spacing + self.fnt_size[1])), subtext, font=self.fnt, fill=color)
+        self.img.paste( (0,0,0), [0,0,self.img.size[0],self.img.size[1]])
         #for i in range (k-1):
         #    self.run_in_thread(lambda : do_lines(int(i/k) * lines, int((1 + i) / k * lines)))
         self.run_in_thread(lambda : do_lines(0, int(lines/2)))
@@ -120,6 +121,6 @@ class videofilter():
         while self.threads != 0:
             pass
         #print("text->img", time.process_time() - start)
-        return img
+        return self.img
     def full_process_img(self, img):
         return self.text_to_img(self.process_pil_img(img), (0,255, 0))
