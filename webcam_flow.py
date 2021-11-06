@@ -27,10 +27,10 @@ def show_webcam(mirror=False, fps = False):
         #cv2.imshow('my webcam', img)  
 
 
-        color_coverted = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        pil_image=Image.fromarray(color_coverted)
-        pil_image = filter.full_process_img(pil_image)
-        #pil_image = filter.text_to_img(filter.process_cv_image(img), (0,255,0) )
+        #color_coverted = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        #pil_image=Image.fromarray(color_coverted)
+        #pil_image = filter.full_process_img(pil_image)
+        pil_image = filter.text_to_img(filter.process_cv_image(img), (0,255,0) )
         #filter.process_cv_image(img)
         numpy_image=np.array(pil_image)  
 
@@ -57,4 +57,4 @@ def show_webcam(mirror=False, fps = False):
     cv2.destroyAllWindows()
 
 if __name__ == '__main__':
-    show_webcam(mirror=True, fps = False)
+    show_webcam(mirror=True, fps = True)

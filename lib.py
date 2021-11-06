@@ -6,6 +6,8 @@ import cv2
 import sys
 import threading
 
+SCALE_FACTOR = 0.1
+
 def main():
     im = Image.open(sys.argv[1])
 
@@ -45,7 +47,7 @@ class videofilter():
         start = time.process_time()
         output = ""
         im = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
-        im = cv2.resize(im, None, fx = 1 * 0.1/1.5, fy = 1 * 0.1/1.5, interpolation = cv2.INTER_CUBIC)
+        im = cv2.resize(im, None, fx = 1 * SCALE_FACTOR, fy = 1 * SCALE_FACTOR, interpolation = cv2.INTER_CUBIC)
         #im = numpy.rot90(im,0)
         if not self.input_size:
             self.input_size = im.shape
@@ -64,7 +66,7 @@ class videofilter():
         return output[:-1]
     def process_pil_img(self, im):
         start = time.process_time()
-        im.thumbnail((int(im.size[0]/10/1.5), int(im.size[1]/10/1.5)), Image.ANTIALIAS)
+        im.thumbnail((int(im.size[0]*SCALE_FACTOR), int(im.size[1]*SCALE_FACTOR)), Image.ANTIALIAS)
         if not self.input_size:
             self.input_size = im.size
         pixels = im.load()
