@@ -6,7 +6,7 @@ import cv2
 import sys
 import threading
 
-SCALE_FACTOR = 0.1
+SCALE_FACTOR = 0.05
 
 def main():
     im = Image.open(sys.argv[1])
@@ -33,7 +33,9 @@ class videofilter():
         self.fnt = ImageFont.truetype('./terminus.ttf', 32)
         #self.chars = [" ", ".", ":", "|", "V", "O", "0", "#", "@"]
         #self.chars = list(" .:-=+*#%@")
-        self.chars = list(" ,:;|1[CO0@")
+        self.chars = list(" ,:;|1[{CO0@")
+        #self.chars = list("$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,\"^`'. ")
+        #self.chars.reverse()
         for i in range(len(self.chars)):
             self.chars[i] = self.chars[i] + self.chars[i]
 
@@ -63,7 +65,7 @@ class videofilter():
             output = output + self.chars[avg]
         #exit()
         #print("cv->text", time.process_time() - start)
-        return output[:-1]
+        return output
     def process_pil_img(self, im):
         start = time.process_time()
         im.thumbnail((int(im.size[0]*SCALE_FACTOR), int(im.size[1]*SCALE_FACTOR)), Image.ANTIALIAS)
