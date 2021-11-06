@@ -8,7 +8,7 @@ import numpy as np
 from PIL import Image
 import lib
 
-def show_webcam(mirror=False):
+def show_webcam(mirror=False, fps = False):
     cam = cv2.VideoCapture(0)
     filter = lib.videofilter()
     prev_frame_time = 0
@@ -17,25 +17,9 @@ def show_webcam(mirror=False):
     while True:
     
         
-        font = cv2.FONT_HERSHEY_SIMPLEX 
-        
-        new_frame_time = time.time() 
-    
-        
-    
-        
-        
-        
-        fps = 1/(new_frame_time-prev_frame_time) 
-        prev_frame_time = new_frame_time 
-    
-        
-        fps = int(fps) 
-    
-        
-        
-        fps = str(fps) 
+        font = cv2.FONT_HERSHEY_SIMPLEX
         ret_val, img = cam.read()
+
 
         
         if mirror: 
@@ -53,11 +37,24 @@ def show_webcam(mirror=False):
         # convert to a openCV2 image, notice the COLOR_RGB2BGR which means that 
         # the color is converted from RGB to BGR format
         img=cv2.cvtColor(numpy_image, cv2.COLOR_RGB2BGR) 
-        cv2.putText(img, fps, (7, 70), font, 3, (100, 255, 0), 3, cv2.LINE_AA) 
+        if fps:
+            new_frame_time = time.time() 
+            
+            fps = 1/(new_frame_time-prev_frame_time) 
+            prev_frame_time = new_frame_time 
+        
+            
+            fps = int(fps) 
+        
+            
+            
+            fps = str(fps) 
+            cv2.putText(img, fps, (7, 70), font, 3, (100, 255, 0), 3, cv2.LINE_AA) 
+
         cv2.imshow('my webcam', img)
         if cv2.waitKey(1) == 27: 
             break  # esc to quit
     cv2.destroyAllWindows()
 
 if __name__ == '__main__':
-    show_webcam(mirror=True)
+    show_webcam(mirror=True, fps = False)
