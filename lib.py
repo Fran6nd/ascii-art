@@ -53,9 +53,6 @@ class videofilter():
             im = cv2.resize(im, None, fx = 1 * SCALE_FACTOR, fy = 1 * SCALE_FACTOR, interpolation = cv2.INTER_CUBIC)
         else:
             SCALE_FACTOR = 1/max(im.shape[0]/max_size[0],im.shape[1]/max_size[1])
-            print(max_size, im.shape)
-            #SCALE_FACTOR = 1/25
-            #SCALE_FACTOR = 0.01
             max_size = (int(max_size[0]/2), max_size[1])
             im = cv2.resize(im, max_size, interpolation = cv2.INTER_CUBIC)
         #im = numpy.rot90(im,0)
