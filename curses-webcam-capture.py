@@ -46,8 +46,8 @@ def draw_menu(stdscr):
 
 
 
-        txt = vf.process_cv_image(img, (curses.COLS-1, curses.LINES-1)).split("\n")
-        for i in range(curses.LINES-1):
+        txt = vf.process_cv_image(img, (curses.COLS-1, curses.LINES)).split("\n")
+        for i in range(curses.LINES):
 
             stdscr.addstr(i, 0, str((txt[i])))
         stdscr.move(cursor_y, cursor_x)

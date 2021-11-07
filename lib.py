@@ -45,16 +45,15 @@ class videofilter():
         self.input_size = None
         self.output_size = None
 
-    def process_cv_image(self, im : numpy.ndarray,  max_size = None):
+    def process_cv_image(self, im : numpy.ndarray,  output_size = None):
         start = time.process_time()
         output = ""
         im = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
-        if not max_size:
+        if not output_size:
             im = cv2.resize(im, None, fx = 1 * SCALE_FACTOR, fy = 1 * SCALE_FACTOR, interpolation = cv2.INTER_CUBIC)
         else:
-            SCALE_FACTOR = 1/max(im.shape[0]/max_size[0],im.shape[1]/max_size[1])
-            max_size = (int(max_size[0]/2), max_size[1])
-            im = cv2.resize(im, max_size, interpolation = cv2.INTER_CUBIC)
+            output_size = (int(output_size[0]/2), output_size[1])
+            im = cv2.resize(im, output_size, interpolation = cv2.INTER_CUBIC)
         #im = numpy.rot90(im,0)
         if not self.input_size:
             self.input_size = im.shape
@@ -71,7 +70,7 @@ class videofilter():
         #exit()
         #print("cv->text", time.process_time() - start)
         return output
-    def process_pil_img(self, im, max_size = None):
+    def process_pil_img(self, im, output_size = None):
         start = time.process_time()
         im.thumbnail((int(im.size[0]*SCALE_FACTOR), int(im.size[1]*SCALE_FACTOR)), Image.ANTIALIAS)
         if not self.input_size:
