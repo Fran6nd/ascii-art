@@ -4,6 +4,20 @@ import lib
 import cv2
 
 def draw_menu(stdscr):
+
+
+    # Loop where k is the last character pressed
+    cam = cv2.VideoCapture(0)
+    #cam = cv2.VideoCapture("rtmp://192.168.1.100/live/av0")
+
+
+
+    frame,err = cam.read()
+    #if err:
+    print(err, "yo", frame)
+
+
+
     k = 0
     cursor_x = 0
     cursor_y = 0
@@ -18,9 +32,6 @@ def draw_menu(stdscr):
     curses.init_pair(1, curses.COLOR_CYAN, curses.COLOR_BLACK)
     curses.init_pair(2, curses.COLOR_RED, curses.COLOR_BLACK)
     curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_WHITE)
-
-    # Loop where k is the last character pressed
-    cam = cv2.VideoCapture(0)
     filter = lib.videofilter()
     vf = lib.videofilter()
     while (k != ord('q')):
